@@ -4,6 +4,7 @@ import java.text.*;
 import java.time.*;
 import java.util.*;
 
+
 class Server 
 {
 
@@ -28,7 +29,7 @@ class Server
 			
 			String packet = in.readLine();
 			
-			//sv.printRequest(packet);
+			sv.printRequest(packet);
 
 			String str = sv.parseRequest(packet);
 
@@ -61,17 +62,17 @@ class Server
 		String gmt = convertTime("GMT", response);
 		String est = convertTime("EST", response);
 		String pst = convertTime("PST", response);
-		if(packet.contains("GET /time?zone=all"))
-		{
-			msg += gmt+"<p>"+est+"<p>"+pst;
-		}
-		else if(packet.contains("GET /time?zone=est"))
+		if(packet.contains("GET /time?zone=est"))
 		{
 			msg+=est;
 		}
 		else if(packet.contains("GET /time?zone=pst"))
 		{
 			msg+=pst;
+		}
+		else if(packet.contains("GET /time?zone=all") || packet.contains("GET /time "))
+		{
+			msg += gmt+"<p>"+est+"<p>"+pst;
 		}
 		else
 		{
@@ -100,10 +101,11 @@ class Server
 		String ampm = "AM";
 		if(hr==0)
 			hr=12;
-		else if(hr>12)
+		else if(hr>=12)
 		{
-			hr-=12;
 			ampm="PM";
+			if(hr>12)
+				hr-=12;
 		}
 		datetime+=hr+":"+time.getMinute()+" "+ampm;
 		
